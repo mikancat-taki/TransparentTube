@@ -18,8 +18,14 @@ import {
   CheckCircle,
   AlertTriangle,
   Info,
-  Star
+  Star,
+  Brain,
+  MessageSquare,
+  Sparkles
 } from "lucide-react";
+import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Home() {
   const [urlValue, setUrlValue] = useState("");
@@ -27,6 +33,8 @@ export default function Home() {
   const [videoId, setVideoId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isValidUrl, setIsValidUrl] = useState(false);
+  const [videoData, setVideoData] = useState<any>(null);
+  const [isCheckingAccess, setIsCheckingAccess] = useState(false);
 
   const YOUTUBE_NOCOOKIE_BASE = 'https://www.youtube-nocookie.com/embed/';
   const EMBED_PARAMS = '?wmode=transparent&iv_load_policy=3&autoplay=0&html5=1&showinfo=0&rel=0&modestbranding=1&playsinline=0&theme=dark';
@@ -57,7 +65,7 @@ export default function Home() {
     }
   }, [urlValue]);
 
-  const handleWatch = () => {
+  const handleWatch = async () => {
     const url = urlValue.trim();
     
     if (!url) {
@@ -74,10 +82,22 @@ export default function Home() {
     setIsLoading(true);
     setError(null);
     
-    // Simulate loading for better UX
-    setTimeout(() => {
+    try {
+      // Check video accessibility with enhanced proxy
+      setIsCheckingAccess(true);
+      
+      // Try to get video metadata
+      try {
+        const videoMeta = await fetch(`/api/video/${extractedId}`).then(res => res.json());
+        setVideoData(videoMeta);
+      } catch (metaError) {
+        // Metadata fetch failed, but continue with basic playback
+        console.log('Metadata fetch failed:', metaError);
+      }
+      
       setVideoId(extractedId);
       setIsLoading(false);
+      setIsCheckingAccess(false);
       
       // Scroll to video section
       setTimeout(() => {
@@ -86,7 +106,21 @@ export default function Home() {
           block: 'start'
         });
       }, 100);
-    }, 1000);
+      
+    } catch (error) {
+      console.error('Video access check failed:', error);
+      // Even if check fails, try to play the video
+      setVideoId(extractedId);
+      setIsLoading(false);
+      setIsCheckingAccess(false);
+      
+      setTimeout(() => {
+        document.getElementById('videoSection')?.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
+    }
   };
 
   const closeVideo = () => {
@@ -131,13 +165,23 @@ export default function Home() {
       {/* Header */}
       <header className="bg-primary border-b border-border">
         <div className="container mx-auto px-4 py-6">
-          <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-              透明YouTube-unblocker
-            </h1>
-            <p className="text-muted-foreground text-sm md:text-base">
-              高速・プライベート・広告なしでYouTube動画を視聴
-            </p>
+          <div className="flex items-center justify-between">
+            <div className="text-center flex-1">
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                透明YouTube-unblocker
+              </h1>
+              <p className="text-muted-foreground text-sm md:text-base">
+                高速・プライベート・広告なしでYouTube動画を視聴
+              </p>
+            </div>
+            <div className="hidden md:block">
+              <Link href="/chat">
+                <Button variant="ghost" className="text-white hover:bg-white/10">
+                  <Brain className="h-4 w-4 mr-2" />
+                  AI チャット
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -179,7 +223,7 @@ export default function Home() {
                 {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    読み込み中...
+                    {isCheckingAccess ? 'アクセス確認中...' : '読み込み中...'}
                   </>
                 ) : (
                   <>
@@ -222,7 +266,19 @@ export default function Home() {
         {videoId && (
           <Card id="videoSection" className="mb-8">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-lg">動画プレーヤー</CardTitle>
+              <div className="flex-1">
+                <CardTitle className="text-lg">動画プレーヤー</CardTitle>
+                {videoData && (
+                  <div className="mt-2">
+                    <h3 className="font-semibold text-foreground">{videoData.title}</h3>
+                    {videoData.author && (
+                      <p className="text-sm text-muted-foreground mt-1">
+                        投稿者: {videoData.author}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -246,23 +302,48 @@ export default function Home() {
               </div>
               
               <div className="p-4 bg-muted">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                     <Shield className="h-4 w-4 text-success" />
                     <span>youtube-nocookie.com経由で安全に視聴中</span>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={loadNewVideo}
-                    className="text-accent hover:text-accent/80"
-                  >
-                    新しい動画を読み込み
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Link href="/chat">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-accent hover:text-accent/80"
+                      >
+                        <MessageSquare className="h-4 w-4 mr-1" />
+                        AI に質問
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={loadNewVideo}
+                      className="text-accent hover:text-accent/80"
+                    >
+                      <RotateCcw className="h-4 w-4 mr-1" />
+                      新しい動画
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
+        )}
+        
+        {/* Mobile AI Chat Button */}
+        {!videoId && (
+          <div className="md:hidden mb-6">
+            <Link href="/chat">
+              <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                <Brain className="h-4 w-4 mr-2" />
+                AI チャットで質問する
+              </Button>
+            </Link>
+          </div>
         )}
         
         {/* Instructions Section - only show when no video is playing */}
@@ -296,7 +377,7 @@ export default function Home() {
                     <Zap className="text-warning mt-1 h-5 w-5" />
                     <div>
                       <h4 className="font-medium">高速読み込み</h4>
-                      <p className="text-muted-foreground text-sm">最適化されたembedで素早い動画再生</p>
+                      <p className="text-muted-foreground text-sm">プロキシ強化で素早く安全な動画再生</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -311,6 +392,20 @@ export default function Home() {
                     <div>
                       <h4 className="font-medium">広告ブロック</h4>
                       <p className="text-muted-foreground text-sm">煩わしい広告なしで視聴</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Brain className="text-accent mt-1 h-5 w-5" />
+                    <div>
+                      <h4 className="font-medium">AI アシスタント</h4>
+                      <p className="text-muted-foreground text-sm">YouTube関連やその他の質問に回答</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Shield className="text-success mt-1 h-5 w-5" />
+                    <div>
+                      <h4 className="font-medium">規制回避</h4>
+                      <p className="text-muted-foreground text-sm">強化されたプロキシで制限を突破</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">

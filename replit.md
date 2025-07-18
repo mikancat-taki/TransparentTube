@@ -1,8 +1,8 @@
-# YouTube Unblocker Application
+# 透明YouTube-unblocker Application
 
 ## Overview
 
-This is a YouTube unblocker application built with a modern full-stack architecture using React (frontend), Express.js (backend), and PostgreSQL (database). The application appears to be designed to help users access YouTube content through privacy-focused embedding, using YouTube's nocookie domain for enhanced privacy.
+This is an enhanced YouTube unblocker application built with a modern full-stack architecture using React (frontend), Express.js (backend), and in-memory storage. The application is designed to help users access YouTube content through privacy-focused embedding with enhanced proxy routing capabilities and an integrated AI assistant for answering questions about YouTube and other topics.
 
 ## User Preferences
 
@@ -49,18 +49,33 @@ Preferred communication style: Simple, everyday language.
 4. **Development Server**: Vite integration for hot reloading
 
 ### Core Features
-1. **YouTube URL Processing**: Extract video IDs from various YouTube URL formats
-2. **Privacy-Focused Embedding**: Uses youtube-nocookie.com domain
-3. **Responsive Design**: Mobile-first approach with dark theme
-4. **Error Handling**: Comprehensive error states and user feedback
+1. **Enhanced YouTube URL Processing**: Extract video IDs from various YouTube URL formats with validation
+2. **Privacy-Focused Embedding**: Uses youtube-nocookie.com domain with enhanced proxy routing
+3. **Anti-Blocking Technology**: Advanced proxy middleware with user-agent rotation and header sanitization
+4. **AI Assistant**: Rule-based chat system for YouTube and general questions without external API dependency
+5. **Video Metadata Fetching**: Automatic retrieval of video titles and author information
+6. **Responsive Design**: Mobile-first approach with dark theme and mobile-friendly AI chat access
+7. **Chat Session Management**: Persistent chat history with session-based conversations
+8. **Error Handling**: Comprehensive error states and user feedback with graceful fallbacks
 
 ## Data Flow
 
+### Video Playback Flow
 1. **User Input**: Users paste YouTube URLs into the input field
-2. **URL Validation**: Frontend extracts and validates video IDs
-3. **Embed Generation**: Creates privacy-focused embed URLs using youtube-nocookie.com
-4. **Video Display**: Renders embedded video with custom styling and controls
-5. **State Management**: TanStack Query manages API requests and caching
+2. **URL Validation**: Frontend extracts and validates video IDs with real-time feedback
+3. **Enhanced Access Check**: Backend validates video accessibility with proxy routing
+4. **Metadata Retrieval**: Attempts to fetch video metadata (title, author) from multiple endpoints
+5. **Embed Generation**: Creates privacy-focused embed URLs using youtube-nocookie.com with enhanced parameters
+6. **Video Display**: Renders embedded video with metadata display and custom controls
+7. **State Management**: TanStack Query manages API requests and caching with error fallbacks
+
+### AI Chat Flow
+1. **Message Input**: Users type questions in the chat interface
+2. **Session Management**: Creates or continues chat sessions with unique IDs
+3. **Rule-Based Processing**: Analyzes message content using keyword matching and context detection
+4. **Response Generation**: Provides relevant answers based on predefined knowledge base
+5. **History Storage**: Saves chat messages and sessions in memory storage
+6. **Real-time Updates**: Updates chat interface with instant message display
 
 ## External Dependencies
 
