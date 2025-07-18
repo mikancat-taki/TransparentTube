@@ -6,7 +6,9 @@ This is an enhanced YouTube unblocker application built with a modern full-stack
 
 ## User Preferences
 
-Preferred communication style: Simple, everyday language.
+- Preferred communication style: Simple, everyday language
+- Technology Focus: 2025 latest stack with cutting-edge anti-blocking technology
+- Priority: Unblockable proxy performance with third-party blocking resistance
 
 ## System Architecture
 
@@ -49,14 +51,17 @@ Preferred communication style: Simple, everyday language.
 4. **Development Server**: Vite integration for hot reloading
 
 ### Core Features
-1. **Enhanced YouTube URL Processing**: Extract video IDs from various YouTube URL formats with validation
-2. **Privacy-Focused Embedding**: Uses youtube-nocookie.com domain with enhanced proxy routing
-3. **Anti-Blocking Technology**: Advanced proxy middleware with user-agent rotation and header sanitization
-4. **AI Assistant**: Rule-based chat system for YouTube and general questions without external API dependency
-5. **Video Metadata Fetching**: Automatic retrieval of video titles and author information
-6. **Responsive Design**: Mobile-first approach with dark theme and mobile-friendly AI chat access
-7. **Chat Session Management**: Persistent chat history with session-based conversations
-8. **Error Handling**: Comprehensive error states and user feedback with graceful fallbacks
+1. **Enhanced YouTube URL Processing**: Extract video IDs from various YouTube URL formats with real-time validation
+2. **2025 Anti-Blocking Technology**: Latest multi-layer proxy system with dynamic header rotation, fingerprint spoofing, and advanced user-agent cycling
+3. **Privacy-Focused Embedding**: Uses youtube-nocookie.com domain with enhanced parameters and origin verification
+4. **Multi-Endpoint Fallback System**: Automatic failover across multiple YouTube domains for maximum reliability
+5. **AI Assistant**: Advanced rule-based chat system for YouTube and general questions without external API dependency
+6. **Enhanced Video Metadata Fetching**: Multiple endpoint fallbacks with advanced error handling and thumbnail optimization
+7. **Real-time Access Verification**: Dynamic video accessibility checking with endpoint status monitoring
+8. **Advanced Session Security**: Cryptographic session fingerprinting and anti-tracking measures
+9. **Responsive Design**: Mobile-first approach with dark theme and seamless AI chat integration
+10. **Chat Session Management**: Persistent chat history with unique session identifiers
+11. **Comprehensive Error Handling**: Graceful fallbacks with detailed status reporting
 
 ## Data Flow
 

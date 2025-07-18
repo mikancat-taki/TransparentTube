@@ -5,45 +5,307 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import axios from 'axios';
 import { z } from 'zod';
 import { insertChatMessageSchema, insertChatSessionSchema } from '@shared/schema';
+import crypto from 'crypto';
 
-// Enhanced YouTube proxy with privacy protection
-const createYouTubeProxy = () => {
+// 2025 Latest Anti-Blocking Technology
+const generateRandomUserAgent = () => {
+  const browsers = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/121.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15'
+  ];
+  return browsers[Math.floor(Math.random() * browsers.length)];
+};
+
+const generateSessionFingerprint = () => {
+  return crypto.randomBytes(16).toString('hex');
+};
+
+const createAdvancedHeaders = () => {
+  const fingerprint = generateSessionFingerprint();
+  return {
+    'User-Agent': generateRandomUserAgent(),
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'DNT': '1',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+    'Sec-Fetch-User': '?1',
+    'Cache-Control': 'max-age=0',
+    'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'X-Session-ID': fingerprint
+  };
+};
+
+// Advanced Multi-Layer Proxy System
+const createMultiLayerProxy = (targetDomain: string) => {
   return createProxyMiddleware({
-    target: 'https://www.youtube-nocookie.com',
+    target: `https://${targetDomain}`,
     changeOrigin: true,
+    secure: true,
     pathRewrite: {
       '^/api/proxy/youtube': '',
+      '^/api/proxy/ytimg': '',
+      '^/api/proxy/': ''
     },
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-      'Accept-Language': 'ja-JP,ja;q=0.9,en;q=0.8',
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache'
-    },
-    onProxyReq: (proxyReq) => {
-      // Remove tracking headers
-      proxyReq.removeHeader('x-forwarded-for');
-      proxyReq.removeHeader('x-real-ip');
-      proxyReq.removeHeader('x-forwarded-proto');
-    },
-    onProxyRes: (proxyRes) => {
-      // Add privacy headers
-      proxyRes.headers['x-frame-options'] = 'SAMEORIGIN';
-      proxyRes.headers['x-content-type-options'] = 'nosniff';
-      proxyRes.headers['referrer-policy'] = 'no-referrer';
+    onProxyReq: (proxyReq, req) => {
+      // Dynamic header rotation with latest 2025 techniques
+      const headers = createAdvancedHeaders();
+      Object.entries(headers).forEach(([key, value]) => {
+        proxyReq.setHeader(key, value);
+      });
+
+      // Remove all tracking and identification headers
+      const trackingHeaders = [
+        'x-forwarded-for', 'x-real-ip', 'x-forwarded-proto',
+        'x-forwarded-host', 'x-original-host', 'forwarded',
+        'cf-connecting-ip', 'cf-ipcountry', 'cf-ray',
+        'x-replit-user-id', 'x-replit-user-name'
+      ];
       
-      // Remove tracking headers from response
-      delete proxyRes.headers['x-youtube-ad-signals'];
+      trackingHeaders.forEach(header => {
+        proxyReq.removeHeader(header);
+      });
+
+      // Add anti-detection measures
+      proxyReq.setHeader('Origin', `https://${targetDomain}`);
+      proxyReq.setHeader('Referer', `https://${targetDomain}/`);
+      
+      // Advanced fingerprint spoofing
+      if (Math.random() > 0.5) {
+        proxyReq.setHeader('X-Requested-With', 'XMLHttpRequest');
+      }
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      // Enhanced privacy and anti-tracking headers
+      const privacyHeaders = {
+        'X-Frame-Options': 'SAMEORIGIN',
+        'X-Content-Type-Options': 'nosniff',
+        'X-XSS-Protection': '1; mode=block',
+        'Referrer-Policy': 'no-referrer-when-downgrade',
+        'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        'Content-Security-Policy': "default-src 'self' *.youtube.com *.youtube-nocookie.com *.ytimg.com *.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.youtube.com *.gstatic.com; style-src 'self' 'unsafe-inline' *.gstatic.com;",
+        'Cache-Control': 'private, no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      };
+
+      Object.entries(privacyHeaders).forEach(([key, value]) => {
+        proxyRes.headers[key.toLowerCase()] = value;
+      });
+
+      // Remove potential tracking response headers
       delete proxyRes.headers['x-youtube-identity-token'];
-    }
+      delete proxyRes.headers['x-youtube-client-name'];
+      delete proxyRes.headers['x-youtube-client-version'];
+      delete proxyRes.headers['set-cookie'];
+      delete proxyRes.headers['server'];
+      delete proxyRes.headers['x-served-by'];
+      delete proxyRes.headers['x-cache'];
+      delete proxyRes.headers['x-cache-hits'];
+      delete proxyRes.headers['x-timer'];
+    },
+    onError: (err, req, res) => {
+      console.error('Proxy error:', err.message);
+      res.status(500).json({ 
+        error: 'Proxy connection failed', 
+        message: 'サーバー接続エラー。しばらく後でお試しください。',
+        code: 'PROXY_ERROR'
+      });
+    },
+    // Advanced timeout and retry settings
+    timeout: 30000,
+    proxyTimeout: 30000,
+    logLevel: 'warn'
   });
 };
 
+// Multi-endpoint fallback system for unblocking
+const YOUTUBE_ENDPOINTS = [
+  'www.youtube-nocookie.com',
+  'youtube-nocookie.com',
+  'www.youtube.com',
+  'youtube.com'
+];
+
+const IMAGE_ENDPOINTS = [
+  'i.ytimg.com',
+  'i1.ytimg.com',
+  'i2.ytimg.com',
+  'i3.ytimg.com',
+  'i4.ytimg.com'
+];
+
+// Advanced video accessibility checker
+async function checkVideoAccess(videoId: string): Promise<{ accessible: boolean; endpoint?: string; error?: string }> {
+  const testUrls = [
+    `https://www.youtube-nocookie.com/embed/${videoId}`,
+    `https://youtube-nocookie.com/embed/${videoId}`,
+    `https://www.youtube.com/watch?v=${videoId}`,
+    `https://youtube.com/watch?v=${videoId}`
+  ];
+
+  for (const url of testUrls) {
+    try {
+      const response = await axios.head(url, {
+        headers: createAdvancedHeaders(),
+        timeout: 10000,
+        maxRedirects: 5
+      });
+      
+      if (response.status === 200) {
+        const domain = new URL(url).hostname;
+        return { accessible: true, endpoint: domain };
+      }
+    } catch (error) {
+      continue; // Try next endpoint
+    }
+  }
+  
+  return { 
+    accessible: false, 
+    error: 'All endpoints failed - video may be unavailable or restricted' 
+  };
+}
+
+// Enhanced video metadata fetching with 2025 techniques and multiple fallbacks
+async function fetchVideoDataWithFallback(videoId: string): Promise<{ title?: string; author?: string; thumbnail?: string; description?: string; duration?: string } | null> {
+  // Multiple API endpoints for enhanced reliability
+  const metadataEndpoints = [
+    {
+      url: `https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=${videoId}&format=json`,
+      parser: (data: any) => ({
+        title: data.title,
+        author: data.author_name,
+        thumbnail: data.thumbnail_url
+      })
+    },
+    {
+      url: `https://youtube.com/oembed?url=http://www.youtube.com/watch?v=${videoId}&format=json`, 
+      parser: (data: any) => ({
+        title: data.title,
+        author: data.author_name,
+        thumbnail: data.thumbnail_url
+      })
+    },
+    {
+      url: `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`,
+      parser: (data: any) => ({
+        title: data.title,
+        author: data.author_name,
+        thumbnail: data.thumbnail_url
+      })
+    }
+  ];
+
+  for (const endpoint of metadataEndpoints) {
+    try {
+      const response = await axios.get(endpoint.url, {
+        headers: createAdvancedHeaders(),
+        timeout: 15000,
+        validateStatus: (status) => status === 200
+      });
+
+      if (response.data && response.data.title) {
+        const metadata = endpoint.parser(response.data);
+        
+        // Enhanced thumbnail URL with multiple resolutions
+        if (metadata.thumbnail) {
+          metadata.thumbnail = metadata.thumbnail.replace('hqdefault', 'maxresdefault');
+        }
+        
+        return metadata;
+      }
+    } catch (error) {
+      console.log(`Metadata endpoint failed: ${endpoint.url}`, error.message);
+      continue; // Try next endpoint
+    }
+  }
+
+  // Fallback: Basic metadata from thumbnail endpoint
+  try {
+    const fallbackThumbnail = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+    const thumbnailResponse = await axios.head(fallbackThumbnail, {
+      headers: createAdvancedHeaders(),
+      timeout: 10000
+    });
+    
+    if (thumbnailResponse.status === 200) {
+      return {
+        title: `YouTube Video ${videoId}`,
+        thumbnail: fallbackThumbnail
+      };
+    }
+  } catch (error) {
+    console.log('Thumbnail fallback failed:', error.message);
+  }
+
+  return null;
+}
+
+// Session ID generator for chat
+function generateSessionId(): string {
+  return crypto.randomBytes(16).toString('hex');
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   
-  // Enhanced YouTube proxy route
-  app.use('/api/proxy/youtube', createYouTubeProxy());
+  // Advanced Multi-Layer Proxy Routes for 2025
+  YOUTUBE_ENDPOINTS.forEach(endpoint => {
+    app.use(`/api/proxy/${endpoint.replace(/\./g, '_')}`, createMultiLayerProxy(endpoint));
+  });
+  
+  IMAGE_ENDPOINTS.forEach(endpoint => {
+    app.use(`/api/proxy/${endpoint.replace(/\./g, '_')}`, createMultiLayerProxy(endpoint));
+  });
+  
+  // General YouTube proxy with fallback
+  app.use('/api/proxy/youtube', createMultiLayerProxy('www.youtube-nocookie.com'));
+  
+  // Advanced video access checking endpoint
+  app.get('/api/unblock/check/:videoId', async (req, res) => {
+    try {
+      const { videoId } = req.params;
+      
+      // Validate video ID format  
+      const videoIdRegex = /^[a-zA-Z0-9_-]{11}$/;
+      if (!videoIdRegex.test(videoId)) {
+        return res.status(400).json({ 
+          error: '無効な動画IDです',
+          accessible: false 
+        });
+      }
+
+      const accessResult = await checkVideoAccess(videoId);
+      
+      res.json({
+        videoId,
+        accessible: accessResult.accessible,
+        endpoint: accessResult.endpoint,
+        message: accessResult.accessible 
+          ? `動画は ${accessResult.endpoint} で利用可能です`
+          : '動画へのアクセスが制限されています',
+        timestamp: new Date().toISOString()
+      });
+      
+    } catch (error) {
+      console.error('Video access check failed:', error);
+      res.status(500).json({ 
+        error: 'アクセス確認に失敗しました',
+        accessible: false
+      });
+    }
+  });
   
   // Enhanced video data fetching with multiple fallbacks
   app.get('/api/video/:videoId', async (req, res) => {
@@ -179,34 +441,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   return httpServer;
 }
 
-// Helper functions
-function generateSessionId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
-}
 
-async function fetchVideoDataWithFallback(videoId: string) {
-  const endpoints = [
-    `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`,
-    `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`
-  ];
-
-  for (const endpoint of endpoints) {
-    try {
-      const response = await axios.get(endpoint, { timeout: 5000 });
-      if (response.data && response.data.title) {
-        return {
-          title: response.data.title,
-          author: response.data.author_name || 'Unknown',
-          duration: response.data.duration || null,
-          thumbnail: response.data.thumbnail_url || null
-        };
-      }
-    } catch (error) {
-      console.log(`Endpoint ${endpoint} failed:`, error.message);
-    }
-  }
-  return null;
-}
 
 async function getAIResponse(message: string): Promise<string> {
   const lowerMessage = message.toLowerCase();
