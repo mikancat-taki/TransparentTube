@@ -1,127 +1,104 @@
-# 透明YouTube-unblocker Application
+透明YouTube-ブロック解除アプリケーション
+概要
+これは、React（フロントエンド）、Express.js（バックエンド）、インメモリストレージを使用した最新のフルスタックアーキテクチャで構築された、強化されたYouTubeブロック解除アプリケーションです。このアプリケーションは、プライバシーを重視した埋め込み機能、強化されたプロキシルーティング機能、YouTubeやその他のトピックに関する質問に答える統合AIアシスタントを通じて、ユーザーがYouTubeコンテンツにアクセスできるよう設計されています。
 
-## Overview
-
-This is an enhanced YouTube unblocker application built with a modern full-stack architecture using React (frontend), Express.js (backend), and in-memory storage. The application is designed to help users access YouTube content through privacy-focused embedding with enhanced proxy routing capabilities and an integrated AI assistant for answering questions about YouTube and other topics.
-
-## User Preferences
-
-- Preferred communication style: Simple, everyday language
-- Technology Focus: 2025 latest stack with cutting-edge anti-blocking technology
-- Priority: Unblockable proxy performance with third-party blocking resistance
-
-## System Architecture
-
-### Frontend Architecture
-- **Framework**: React 18 with TypeScript
-- **Build Tool**: Vite for fast development and optimized builds
-- **UI Framework**: Shadcn/ui components built on Radix UI primitives
-- **Styling**: Tailwind CSS with CSS custom properties for theming
-- **State Management**: TanStack Query (React Query) for server state
-- **Routing**: Wouter for lightweight client-side routing
-- **Form Handling**: React Hook Form with Zod validation
-
-### Backend Architecture
-- **Runtime**: Node.js with Express.js framework
-- **Language**: TypeScript with ES modules
-- **Development**: TSX for TypeScript execution
-- **Build**: ESBuild for production bundling
-- **Architecture Pattern**: RESTful API design
-
-### Database Layer
-- **Database**: PostgreSQL (configured via Drizzle)
-- **ORM**: Drizzle ORM with PostgreSQL dialect
-- **Migrations**: Drizzle Kit for schema management
-- **Connection**: Neon Database serverless driver
-
-## Key Components
-
-### Frontend Components
-1. **Home Page**: Main interface for YouTube URL input and video embedding
-2. **UI Components**: Comprehensive Shadcn/ui component library including:
-   - Form controls (Input, Button, Select, etc.)
-   - Layout components (Card, Dialog, Sheet, etc.)
-   - Data display (Table, Toast, Progress, etc.)
-   - Navigation (Accordion, Tabs, Menubar, etc.)
-
-### Backend Components
-1. **Storage Interface**: Abstracted storage layer with memory-based implementation
-2. **User Management**: Basic user schema with username/password authentication
-3. **Route Registration**: Modular route setup with error handling
-4. **Development Server**: Vite integration for hot reloading
-
-### Core Features
-1. **Enhanced YouTube URL Processing**: Extract video IDs from various YouTube URL formats with real-time validation
-2. **2025 Anti-Blocking Technology**: Latest multi-layer proxy system with dynamic header rotation, fingerprint spoofing, and advanced user-agent cycling
-3. **Privacy-Focused Embedding**: Uses youtube-nocookie.com domain with enhanced parameters and origin verification
-4. **Multi-Endpoint Fallback System**: Automatic failover across multiple YouTube domains for maximum reliability
-5. **AI Assistant**: Advanced rule-based chat system for YouTube and general questions without external API dependency
-6. **Enhanced Video Metadata Fetching**: Multiple endpoint fallbacks with advanced error handling and thumbnail optimization
-7. **Real-time Access Verification**: Dynamic video accessibility checking with endpoint status monitoring
-8. **Advanced Session Security**: Cryptographic session fingerprinting and anti-tracking measures
-9. **Responsive Design**: Mobile-first approach with dark theme and seamless AI chat integration
-10. **Chat Session Management**: Persistent chat history with unique session identifiers
-11. **Comprehensive Error Handling**: Graceful fallbacks with detailed status reporting
-
-## Data Flow
-
-### Video Playback Flow
-1. **User Input**: Users paste YouTube URLs into the input field
-2. **URL Validation**: Frontend extracts and validates video IDs with real-time feedback
-3. **Enhanced Access Check**: Backend validates video accessibility with proxy routing
-4. **Metadata Retrieval**: Attempts to fetch video metadata (title, author) from multiple endpoints
-5. **Embed Generation**: Creates privacy-focused embed URLs using youtube-nocookie.com with enhanced parameters
-6. **Video Display**: Renders embedded video with metadata display and custom controls
-7. **State Management**: TanStack Query manages API requests and caching with error fallbacks
-
-### AI Chat Flow
-1. **Message Input**: Users type questions in the chat interface
-2. **Session Management**: Creates or continues chat sessions with unique IDs
-3. **Rule-Based Processing**: Analyzes message content using keyword matching and context detection
-4. **Response Generation**: Provides relevant answers based on predefined knowledge base
-5. **History Storage**: Saves chat messages and sessions in memory storage
-6. **Real-time Updates**: Updates chat interface with instant message display
-
-## External Dependencies
-
-### Core Dependencies
-- **@neondatabase/serverless**: PostgreSQL connection for serverless environments
-- **@tanstack/react-query**: Server state management
-- **drizzle-orm**: Type-safe ORM for database operations
-- **@radix-ui/***: Headless UI component primitives
-- **react-hook-form**: Form state management
-- **zod**: Runtime type validation
-
-### Development Dependencies
-- **vite**: Build tool and development server
-- **typescript**: Type checking and compilation
-- **tailwindcss**: Utility-first CSS framework
-- **eslint**: Code linting and formatting
-
-## Deployment Strategy
-
-### Development
-- Uses Vite dev server with hot module replacement
-- TypeScript compilation with TSX for server-side execution
-- Development-specific error overlays and debugging tools
-
-### Production Build
-1. **Frontend**: Vite builds React app to static assets in `dist/public`
-2. **Backend**: ESBuild bundles Express server to `dist/index.js`
-3. **Database**: Drizzle migrations applied via `db:push` command
-4. **Serving**: Express serves both API routes and static frontend assets
-
-### Configuration
-- Environment-based configuration using `NODE_ENV`
-- Database connection via `DATABASE_URL` environment variable
-- Replit-specific optimizations for cloud deployment
-- CORS and security middleware for production safety
-
-### Key Architectural Decisions
-
-1. **Monorepo Structure**: Frontend (`client/`), backend (`server/`), and shared (`shared/`) code in single repository
-2. **Type Safety**: Full TypeScript coverage with shared types between frontend and backend
-3. **Privacy Focus**: Uses YouTube's nocookie domain to minimize tracking
-4. **Serverless Ready**: Uses Neon Database for serverless PostgreSQL deployment
-5. **Component Architecture**: Modular UI components with consistent design system
-6. **Error Boundaries**: Comprehensive error handling at multiple application layers
+ユーザー設定
+好ましいコミュニケーションスタイル: シンプルで日常的な言葉遣い
+テクノロジーフォーカス：最先端のアンチブロッキング技術を搭載した2025年最新スタック
+優先度: サードパーティのブロッキング耐性を備えたブロック不可能なプロキシパフォーマンス
+システムアーキテクチャ
+フロントエンドアーキテクチャ
+フレームワーク: TypeScript を使用した React 18
+ビルドツール: 高速開発と最適化されたビルドのための Vite
+UI フレームワーク: Radix UI プリミティブ上に構築された Shadcn/ui コンポーネント
+スタイリング: テーマ設定用の CSS カスタム プロパティを備えた Tailwind CSS
+状態管理：サーバー状態用のTanStackクエリ（Reactクエリ）
+ルーティング: 軽量クライアント側ルーティング用の Wouter
+フォーム処理: Zod 検証を使用した React Hook Form
+バックエンドアーキテクチャ
+ランタイム: Express.js フレームワークを使用した Node.js
+言語: TypeScript（ESモジュール付き）
+開発: TypeScript実行用のTSX
+ビルド: プロダクションバンドル用の ESBuild
+アーキテクチャパターン: RESTful API設計
+データベース層
+データベース: PostgreSQL (Drizzle 経由で構成)
+ORM : PostgreSQL方言を使用したDrizzle ORM
+移行: スキーマ管理のためのDrizzle Kit
+接続: Neon データベース サーバーレス ドライバー
+主要コンポーネント
+フロントエンドコンポーネント
+ホームページ: YouTube URL入力と動画埋め込みのメインインターフェース
+UI コンポーネント: 以下を含む包括的な Shadcn/ui コンポーネント ライブラリ:
+フォーム コントロール (入力、ボタン、選択など)
+レイアウト コンポーネント (カード、ダイアログ、シートなど)
+データ表示（表、トースト、進捗状況など）
+ナビゲーション (アコーディオン、タブ、メニューバーなど)
+バックエンドコンポーネント
+ストレージインターフェース: メモリベースの実装による抽象化されたストレージ層
+ユーザー管理: ユーザー名/パスワード認証による基本的なユーザースキーマ
+ルート登録: エラー処理を備えたモジュール式ルート設定
+開発サーバー: ホットリロードのための Vite 統合
+コア機能
+強化された YouTube URL 処理: リアルタイム検証により、さまざまな YouTube URL 形式から動画 ID を抽出します。
+2025アンチブロッキングテクノロジー：動的なヘッダーローテーション、フィンガープリントスプーフィング、高度なユーザーエージェントサイクリングを備えた最新のマルチレイヤープロキシシステム
+プライバシー重視の埋め込み：強化されたパラメータとオリジン検証を備えたyoutube-nocookie.comドメインを使用
+マルチエンドポイント フォールバック システム: 複数の YouTube ドメイン間での自動フェイルオーバーにより、最大限の信頼性を実現します。
+AIアシスタント：外部APIに依存しない、YouTubeや一般的な質問のための高度なルールベースのチャットシステム
+強化されたビデオメタデータの取得: 高度なエラー処理とサムネイルの最適化を備えた複数のエンドポイントフォールバック
+リアルタイムアクセス検証：エンドポイントステータス監視による動的なビデオアクセシビリティチェック
+高度なセッションセキュリティ: 暗号化セッションフィンガープリンティングと追跡防止対策
+レスポンシブデザイン: ダークテーマとシームレスなAIチャット統合を備えたモバイルファーストのアプローチ
+チャットセッション管理: 固有のセッション識別子による永続的なチャット履歴
+包括的なエラー処理: 詳細なステータスレポートによる適切なフォールバック
+データフロー
+ビデオ再生フロー
+ユーザー入力: ユーザーは入力フィールドに YouTube の URL を貼り付けます。
+URL検証: フロントエンドがリアルタイムフィードバックでビデオIDを抽出して検証します
+強化されたアクセスチェック: バックエンドはプロキシルーティングを使用してビデオのアクセシビリティを検証します
+メタデータの取得: 複数のエンドポイントからビデオのメタデータ (タイトル、作成者) を取得しようとします
+埋め込み生成: 強化されたパラメータを備えた youtube-nocookie.com を使用して、プライバシー重視の埋め込み URL を作成します。
+ビデオ表示: メタデータ表示とカスタムコントロールを備えた埋め込みビデオをレンダリングします
+状態管理: TanStack Query は、エラーフォールバックを使用して API リクエストとキャッシュを管理します。
+AIチャットフロー
+メッセージ入力: ユーザーはチャットインターフェースに質問を入力します
+セッション管理: 一意のIDでチャットセッションを作成または継続します
+ルールベース処理: キーワードマッチングとコンテキスト検出を使用してメッセージの内容を分析します
+応答生成: 事前に定義された知識ベースに基づいて関連する回答を提供します
+履歴保存: チャットメッセージとセッションをメモリストレージに保存します
+リアルタイム更新: インスタントメッセージ表示でチャットインターフェースを更新します
+外部依存関係
+コア依存関係
+@neondatabase/serverless : サーバーレス環境向けの PostgreSQL 接続
+@tanstack/react-query : サーバー状態管理
+drizzle-orm : データベース操作のための型安全な ORM
+@radix-ui/ *: ヘッドレスUIコンポーネントプリミティブ
+react-hook-form : フォームの状態管理
+zod : 実行時の型検証
+開発依存関係
+vite : ビルドツールと開発サーバー
+typescript : 型チェックとコンパイル
+tailwindcss : ユーティリティファーストの CSS フレームワーク
+eslint : コードのリンティングとフォーマット
+展開戦略
+発達
+ホットモジュール交換機能を備えたVite開発サーバーを使用
+サーバー側実行のためのTSXを使用したTypeScriptコンパイル
+開発特有のエラーオーバーレイとデバッグツール
+プロダクションビルド
+フロントエンド: ViteはReactアプリを静的アセットにビルドしますdist/public
+バックエンド: ESBuildはExpressサーバーをバンドルし、dist/index.js
+データベース:db:pushコマンド経由でDrizzleマイグレーションを適用
+提供: ExpressはAPIルートと静的フロントエンドアセットの両方を提供します
+構成
+環境ベースの構成NODE_ENV
+DATABASE_URL環境変数経由のデータベース接続
+クラウド展開のためのReplit固有の最適化
+生産の安全性のための CORS とセキュリティミドルウェア
+主要なアーキテクチャ上の決定
+モノレポ構造: フロントエンド ( client/)、バックエンド ( server/)、共有 ( shared/) コードを単一のリポジトリにまとめる
+型安全性: フロントエンドとバックエンド間で型を共有する完全な TypeScript カバレッジ
+プライバシー重視: トラッキングを最小限に抑えるために YouTube の nocookie ドメインを使用します
+サーバーレス対応: サーバーレス PostgreSQL デプロイメントに Neon データベースを使用
+コンポーネントアーキテクチャ: 一貫したデザインシステムを備えたモジュール式UIコンポーネント
+エラー境界: 複数のアプリケーション層での包括的なエラー処理
